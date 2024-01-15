@@ -56,6 +56,11 @@ export const useFetch = (endpoint) => {
       console.error('Error al realizar la solicitud:', error.message)
     }
   };
+  const fetchDeletd = async()=>{
+   await API.delete(endpoint)
+   dispatch({type:FETCH_DATA.SET_DELETD})
+  
+  } 
   // useEffect(() => {
   //   fetchData();
   //   fetchPost()

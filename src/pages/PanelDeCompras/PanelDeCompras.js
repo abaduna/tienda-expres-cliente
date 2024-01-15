@@ -5,13 +5,15 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import Table from "react-bootstrap/Table";
 import { API } from "../../API";
+import NavbarAdmin from "../../componets/NavbarAdmin";
 function PanelDeCompras() {
   const [endpoint, setEndpoint] = useState(`/api/pedidos/entregados`);
   const { state, fetchData } = useFetch(endpoint);
   const { data, loading, error } = state;
   const [ordenado, setOrdenado] = useState("");
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const [productList, setProductList] = useState(null);
+  const [mostrarCancelar, setMostrarCancelar] = useState(false);
   // const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   console.log(data);
@@ -39,21 +41,27 @@ function PanelDeCompras() {
   useEffect(() => {
     fetchData();
   }, []);
-  const viewOrders = async(id_orden) => {
+  const viewOrders = async (id_orden) => {
     setOpen(true);
     try {
-      const productListData  = await API.get(`/api/pedidos/productList/${id_orden}`)
-     console.log(productListData.data );
-     setProductList(productListData?.data);
-    } catch (error) {
-      
-    }
-     
-    }
-  
+      const productListData = await API.get(
+        `/api/pedidos/productList/${id_orden}`
+      );
+      console.log(productListData.data);
+      setProductList(productListData?.data);
+    } catch (error) {}
+  };
+
+  const send = async (id_orden) => {
+    await API.patch(`/api/pedidos/ModifyStatus/${id_orden}`, {
+      estado: "enviado",
+    });
+    fetchData();
+  };
   return (
     <>
-      <div> 
+      <NavbarAdmin></NavbarAdmin>
+      <div>
         <Modal
           open={open}
           onClose={handleClose}
@@ -61,25 +69,23 @@ function PanelDeCompras() {
           aria-describedby="modal-modal-description"
         >
           <Box sx={style}>
-            
+            <button onClick={handleClose}>❌</button>
             <Typography id="modal-modal-title" variant="h6" component="h2">
-            {productList &&
+              {productList &&
                 productList.map((product, index) => (
                   <div key={index}>
                     <p>Product Name: {product.nombre}</p>
                     <p>Quantity: {product.precio}</p>
-                    {/* Add more properties as needed */}
+                    <button>Deletd</button>
                   </div>
                 ))}
             </Typography>
-            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-             
-              <button onClick={handleClose}>❌</button>
-            </Typography>
+            <Typography
+              id="modal-modal-description"
+              sx={{ mt: 2 }}
+            ></Typography>
           </Box>
-          
         </Modal>
-        
       </div>
       <Table striped bordered hover>
         <thead>
@@ -97,7 +103,10 @@ function PanelDeCompras() {
               <tr key={item.id}>
                 <td>{item.nombre}</td>
                 <td>{parseInt(item.cuando_fue_comprado, 10)}</td>
-                <td>{item.estado}</td>
+                <td>
+                  {item.estado}
+                  
+                </td>
                 <td>{item.total}</td>
                 <td>
                   <button onClick={() => viewOrders(item.id_orden)}>

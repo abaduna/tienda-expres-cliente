@@ -23,7 +23,13 @@ export const fechReducer = (state,action) =>{
 
             }
         
+case (FETCH_DATA.SET_DELETD):
+    return{
+    ...state,
+    loading: false,
+    error:false
 
+    }
         default:
             return state 
 
