@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
@@ -6,14 +6,14 @@ import { Container, Grid, TextField, Button, Box } from "@mui/material";
 import { loginSchema } from "./schemas";
 import { useFetch } from "./../../hoocks/useFetch";
 import axios from "axios";
-
+import NavbarAdmin from "../../componets/NavbarAdmin";
 const Login = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [wrongPassword, setWrongPassword] = useState(false);
   const [cargando, setCargando] = useState(false);
-
+  const [useAdminState,setUserAdminState] = useState(false)
   const [endpoint, setEndpoint] = useState(`/api/productos`);
   const { state, fetchUsers } = useFetch(endpoint);
 
@@ -49,7 +49,7 @@ const Login = () => {
     if (token != "") {
       localStorage.setItem("token", token)
     }
-
+    navigate("/panelentrados")
   }
   const formik = useFormik({
     initialValues: {
@@ -63,9 +63,17 @@ const Login = () => {
       handleLogin(values);
     },
   });
+useEffect(()=>{
+  let token = localStorage.getItem("token");
 
+  if (token) {
+    setUserAdminState(true);
+  }
+},[])
   return (
-    <Container>
+    <>
+    {useAdminState && <NavbarAdmin className="scroll-container"></NavbarAdmin>}
+     <Container>
       <Grid container="row" justifyContent={"center"} alignContent={"center"}>
         <Grid item xs={12} md={4}>
           <form onSubmit={formik.handleSubmit}>
@@ -113,7 +121,9 @@ const Login = () => {
           {wrongPassword && <span> Usuario o Contraseña incorrecta</span>}
         </Grid>
       </Grid>
-    </Container>
+    </Container>   
+    </>
+
   );
 };
 

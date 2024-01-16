@@ -6,6 +6,7 @@ import Modal from "@mui/material/Modal";
 import Table from "react-bootstrap/Table";
 import { API } from "../../API";
 import NavbarAdmin from "../../componets/NavbarAdmin";
+import { useNavigate } from "react-router-dom";
 function PanelDeCompras() {
   const [endpoint, setEndpoint] = useState(`/api/pedidos/entregados`);
   const { state, fetchData } = useFetch(endpoint);
@@ -58,6 +59,42 @@ function PanelDeCompras() {
     });
     fetchData();
   };
+  function parseJwt(token) {
+    if (token && token !== "") {
+      var base64Url = token.split(".")[1];
+      var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+      var jsonPayload = decodeURIComponent(
+        window
+          .atob(base64)
+          .split("")
+          .map(function (c) {
+            return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+          })
+          .join("")
+      );
+
+      return JSON.parse(jsonPayload);
+    }
+  }
+  const navigate = useNavigate();
+  const sacarDeAdmin = () => {
+    
+    let token = localStorage.getItem("token");
+    const usuers = parseJwt(token);
+    console.log(usuers);
+
+    if (token === null) {
+      console.log("sali de aka");
+      console.log("anda de aka no se que estas haciendo aka");
+      navigate("/");
+    }
+
+    console.log("token de sp " + token);
+  };
+  useEffect(() => {
+    sacarDeAdmin();
+  },[]);
+  
   return (
     <>
       <NavbarAdmin></NavbarAdmin>
@@ -103,10 +140,7 @@ function PanelDeCompras() {
               <tr key={item.id}>
                 <td>{item.nombre}</td>
                 <td>{parseInt(item.cuando_fue_comprado, 10)}</td>
-                <td>
-                  {item.estado}
-                  
-                </td>
+                <td>{item.estado}</td>
                 <td>{item.total}</td>
                 <td>
                   <button onClick={() => viewOrders(item.id_orden)}>

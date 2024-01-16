@@ -52,7 +52,7 @@
 /* Aplicar el desplazamiento suave a un elemento específico */
 .scroll-container {
   position: fixed;
-  top: 10px; /* Ajusta la posición superior según tus necesidades */
+  top: 50px; /* Ajusta la posición superior según tus necesidades */
   left: 10px;
   color: rgba(80, 80, 80, 0.495);
 }
@@ -71,7 +71,7 @@
   /* Estilos específicos para dispositivos móviles */
   .Conuter {
     color: white;
-    background-color: rgba(255, 0, 0, 0.439);
+  
     width: 5px;
     margin: 10px;
     border-radius: 50%;

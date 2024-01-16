@@ -9,17 +9,26 @@ import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import CaritoDeComprasCOmponet from "../../componets/CaritoDeComprasCOmponet";
-
+import { UserNameContext } from "../../contexts/username";
 import { useFetch } from "../../hoocks/useFetch";
+import NavbarAdmin from "../../componets/NavbarAdmin";
 function VerProductos() {
   const [productos, setProductos] = useState([]);
   const { agregarCarritoDeCompras } = useContext(CaritoComprarContex);
   const [endpoint, setEndpoint] = useState(`/api/productos`);
   const { state, fetchData } = useFetch(endpoint);
   const { data, loading, error } = state;
+  // const { useAdminState ,setUserAdminState} = useContext(UserNameContext)  || { useAdminState: false };
+  const [useAdminState,setUserAdminState] = useState(false)
+  console.log(useAdminState);
   console.log(data);
   useEffect(() => {
     fetchData();
+    let token = localStorage.getItem("token");
+
+    if (token) {
+      setUserAdminState(true);
+    }
   }, []);
 
   const agregarACarrito = (product) => {
@@ -29,10 +38,10 @@ function VerProductos() {
 
   return (
     <>
+      {useAdminState && <NavbarAdmin className="scroll-container"></NavbarAdmin>}
       <CaritoDeComprasCOmponet></CaritoDeComprasCOmponet>
 
       <div>
-        <h1>TIenda</h1>
         <div className="productos-grid">
           {data.length > 0 &&
             data?.map((product) => (

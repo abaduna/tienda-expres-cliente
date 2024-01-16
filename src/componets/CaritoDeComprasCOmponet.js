@@ -7,7 +7,8 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { CaritoComprarContex } from "../contexts/carito";
-import WhatsAppLink from "./WhatsAppLink ";
+import WhatsAppLink from "./WhatsAppLink "
+
 function CaritoDeComprasCOmponet() {
   const { caritoDeCompras } = useContext(CaritoComprarContex);
 
@@ -36,9 +37,7 @@ function CaritoDeComprasCOmponet() {
             <Nav.Link className="white">
               <Link to="/login">Login</Link>
             </Nav.Link>
-            <Nav.Link className="white">
-              <Link to="/subirProducto">subirProducto</Link>
-            </Nav.Link>
+            
           </Nav>
         </Navbar.Collapse>
       </Container>
